@@ -43,7 +43,6 @@ export class Grid {
     console.log("Grid constructor");
     this.setup();
     this.initResizeObserver();
-
   }
 
   initResizeObserver() {
@@ -57,12 +56,12 @@ export class Grid {
   setup() {
     this.canvas = document.querySelector(".hero_canvas");
     this.ctx = this.canvas.getContext("2d");
-
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
+    
     this.canvas.width = this.canvas.offsetWidth;
     this.canvas.height = this.canvas.offsetHeight;
 
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    
     this.blockWidth = 16;
     this.blockGap = 8;
     this.blocks = [];
