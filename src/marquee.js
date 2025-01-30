@@ -1,4 +1,6 @@
-import gsap from "gsap";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+gsap.registerPlugin(ScrollTrigger);
 
 export class Marquee {
   constructor(rootElement, config = {}) {
@@ -7,9 +9,10 @@ export class Marquee {
     this.marqueeInner = this.marquee.querySelector(".marquee_inner");
     this.animation = null;
 
-    this.speed = config.speed || 4, // how many seconds it takes to scroll one marqueeInnerWidth
-    this.reversed = config.reversed || false, 
-    this.pauseOnHover = config.pauseOnHover || false,
+    this.speed = config.speed || 4; // how many seconds it takes to scroll one marqueeInnerWidth
+    this.reversed = config.reversed || false;
+    this.pauseOnHover = config.pauseOnHover || false;
+    this.scrollTrigger = config.scrollTrigger || null;
 
     this.updateDimensions();
     this.setup();
@@ -20,9 +23,11 @@ export class Marquee {
     this.resizeObserver.observe(this.marquee);
 
     // Pause on hover
+    this.pause = this.pause.bind(this);
+    this.play = this.play.bind(this);
     if (this.pauseOnHover) {
-      this.marquee.addEventListener("mouseover", () => this.pause());
-      this.marquee.addEventListener("mouseout", () => this.play());
+      this.marquee.addEventListener("mouseover", this.pause);
+      this.marquee.addEventListener("mouseout", this.play);
     }
   }
 
@@ -71,17 +76,24 @@ export class Marquee {
   animate() {
     // Calculate the total width of one item (including gap)
     const itemWidth = this.marqueeInnerWidth + this.gap;
+    const tlConfig = {
+      defaults: { ease: "none", duration: this.speed },
+      repeat: -1
+    }
+
+    if (this.scrollTrigger) {
+      tlConfig.scrollTrigger = {
+        trigger: this.marquee,
+        start: "top bottom",
+        end: "bottom top",
+        toggleActions: "play pause play pause",
+        ...this.scrollTrigger,
+      }
+    }
 
     // Create the animation
-    this.animation = gsap.to(this.wrapper, {
-      x: this.reversed ? itemWidth : -itemWidth,
-      duration: this.speed,
-      ease: "none",
-      repeat: -1,
-      onRepeat: () => {
-        gsap.set(this.wrapper, { x: 0 });
-      },
-    });
+    this.animation = gsap.timeline(tlConfig);
+    this.animation.fromTo(this.wrapper, { x: 0 }, { x: this.reversed ? itemWidth : -itemWidth });
   }
 
   handleResize() {
@@ -116,8 +128,8 @@ export class Marquee {
     }
 
     // Remove all event listeners and observers that were added to the marquee
-    this.marquee.removeEventListener("mouseover", () => this.pause());
-    this.marquee.removeEventListener("mouseout", () => this.resume());
+    this.marquee.removeEventListener("mouseover", this.pause);
+    this.marquee.removeEventListener("mouseout", this.play);
     this.resizeObserver.disconnect();
 
     // Reset marquee to intial state
