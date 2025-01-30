@@ -10,5 +10,8 @@
   "description": "",
   "devDependencies": {
     "esbuild": "0.24.2"
+  },
+  "dependencies": {
+    "gsap": "^3.12.7"
   }
 }
