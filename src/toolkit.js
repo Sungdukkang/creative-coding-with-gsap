@@ -125,7 +125,7 @@ export class ToolkitText {
   destroy() {
     console.log("Destroying toolkit text");
     ScrollTrigger.getAll().forEach((st) => {
-      if (st.trigger = this.element) {
+      if (st.trigger == this.element) {
         st.kill();
       }
     });
