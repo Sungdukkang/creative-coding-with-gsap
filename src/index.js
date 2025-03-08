@@ -4,17 +4,19 @@ import { Grid } from './grid';
 import { Heading } from './heading';
 import { ToolkitText } from './toolkit';
 import { ColorModeButton } from './colorModeButton';
+import { ImageRevealSection } from './imageReveal';
 
 import { reveal } from './helpers/reveal';
 
 class App {
   constructor() {
     this.clock = null;
-    this.marquess = [];
+    this.marquees = [];
     this.grid = null;
     this.heading = null;
     this.toolkit = null;
     this.colorModeButton = null;
+    this.imageReveal = null;
   }
 
   init() {
@@ -35,7 +37,7 @@ class App {
         reversed: i % 2 === 0,
         scrollTrigger: true,
       });
-      this.marquess.push(marquee);
+      this.marquees.push(marquee);
     });
 
     // Heading
@@ -44,6 +46,9 @@ class App {
     // ToolkitText
     if (this.toolkit) this.toolkit.destroy();
     this.toolkit = new ToolkitText(".toolkit_p");
+
+    // Image Reveal Section
+    this.imageReveal = new ImageRevealSection(".images_thumbnails_list", ".images_full_list");
     
     // Initialize ColorModeButton and pass a reference to the handler
     this.colorModeButton = new ColorModeButton(() => this.handleColorModeChange());

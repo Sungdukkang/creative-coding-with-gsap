@@ -23,11 +23,11 @@ export class Marquee {
     this.resizeObserver.observe(this.marquee);
 
     // Pause on hover
-    this.pause = this.pause.bind(this);
-    this.play = this.play.bind(this);
+    this.mouseoverHandler = this.pause.bind(this);
+    this.mouseoutHandler = this.play.bind(this);
     if (this.pauseOnHover) {
-      this.marquee.addEventListener("mouseover", this.pause);
-      this.marquee.addEventListener("mouseout", this.play);
+      this.marquee.addEventListener("mouseover", this.mouseoverHandler);
+      this.marquee.addEventListener("mouseout", this.mouseoutHandler);
     }
   }
 
@@ -128,8 +128,8 @@ export class Marquee {
     }
 
     // Remove all event listeners and observers that were added to the marquee
-    this.marquee.removeEventListener("mouseover", this.pause);
-    this.marquee.removeEventListener("mouseout", this.play);
+    this.marquee.removeEventListener("mouseover", this.mouseoverHandler);
+    this.marquee.removeEventListener("mouseout", this.mouseoutHandler);
     this.resizeObserver.disconnect();
 
     // Reset marquee to intial state
