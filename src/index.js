@@ -60,6 +60,7 @@ class App {
       this.handleColorModeChange()
     );
 
+    // Reveal hidden elements and hide load screen
     reveal();
   }
 
